@@ -26,7 +26,7 @@ Follow the installation steps of AntDesign and install the AntDeisgn dependencie
     <Router AppAssembly="@typeof(Program).Assembly">
         <Found Context="routeData">
     -       <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" / >
-    +       <ReuseTabsRouteView RouteData="@routeData" DefaultLayout="@typeof   (MainLayout)" />
+    +       <ReuseTabsRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
         </Found>
         ...
     </Router>
@@ -45,7 +45,7 @@ Follow the installation steps of AntDesign and install the AntDeisgn dependencie
 
         <div class="main">
     -       <div class="top-row px-4">
-    -           <a href="http://blazor.net" target="_blank"     class="ml-md-auto">About</a>
+    -           <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
     -       </div>
     -       <div class="content px-4">
     -           @Body
