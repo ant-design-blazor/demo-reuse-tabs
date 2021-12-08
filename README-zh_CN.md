@@ -1,28 +1,28 @@
 # ReuseTabs
 
-A reuse tabs demo for [Ant Design Blazor](https://github.com/ant-design-blazor/ant-design-blazor).
+[Ant Design Blazor](https://github.com/ant-design-blazor/ant-design-blazor) 多标签页组件。
 
-English | [简体中文](README-zh_CN.md)
+[English](README.md) | 简体中文
 
-# Demo
+# 实例
 
 https://antblazor.com/demo-reuse-tabs/
 
-# ScreenShot
+# 截图
 
 ![demo](./assets/reuse-tabs-demo1.gif)
 
-# How to use
+# 如何使用
 
-## Prerequisites
+## 前置条件
 
-Follow the installation steps of AntDesign and install the AntDesign dependencies.
+先按照 Ant Design 的文档安装 AntDesign 组件 Nuget 包。
 
-## Basic case
+## 基础使用
 
-1. First of all, create a blazor project using `dotnet new` command.
+1. 首先，使用 `dotnet new` 命令创建一个 Blazor 项目。
 
-2. Modify the `App.razor` file, replace the `RouteView` with `ReuseTabsRouteView`.
+2. 修改项目中的 `App.razor` 文件，使用 `ReuseTabsRouteView` 替换 `RouteView`。
 
    ```diff
    <Router AppAssembly="@typeof(Program).Assembly">
@@ -35,7 +35,7 @@ Follow the installation steps of AntDesign and install the AntDesign dependencie
 
    ```
 
-3. Then modify the `MainLayout.razor` file, add the `ReuseTabs` component. Note that `@Body` is not required at this case.
+3. 修改 `MainLayout.razor` 文件, 增加 `ReuseTabs` 组件。注意 `@Body` 是不需要的。
 
    ```diff
    @inherits LayoutComponentBase
@@ -58,16 +58,16 @@ Follow the installation steps of AntDesign and install the AntDesign dependencie
 
    ```
 
-## Customize tab title
+## 自定义标签标题
 
-- If it's just text, you can use the `ReuseTabsPageTitle` attribute.
+- 如果只是文本标题，只需在页面上增加 `ReuseTabsPageTitle` 特性。
 
   ```diff
   @page "/counter"
   + @attribute [ReuseTabsPageTitle("Counter")]
   ```
 
-- If you want to use a template, then implement the `IReuseTabsPage` interface and implement the method
+- 如果需要使用模板来设置复杂的标题, 则需要页面组件实现 `IReuseTabsPage` 接口和 `GetPageTitle` 方法，就返回动态的标题了。
 
   ```diff
   @page "/"
@@ -84,16 +84,16 @@ Follow the installation steps of AntDesign and install the AntDesign dependencie
   }
   ```
 
-## More options
+## 更多配置
 
-You can set more options by using `ReuseTabsPage` attribute above pages.
+你可以通过使用 `ReuseTabsPage` 特性来设置更多选项。
 
 ```diff
 @page "/counter"
 + @attribute [ReuseTabsPage(Title = "Home", Closable = false)]
 ```
 
-If you want to ignore any pages, you can setting the `Ignore=true` in `ReuseTabsPage` attribute.
+如果你想忽略一些页面, 可以在 `ReuseTabsPage` 设置 `Ignore=true`。
 
 ```diff
 @page "/counter"
