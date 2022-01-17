@@ -84,6 +84,40 @@ Follow the installation steps of AntDesign and install the AntDesign dependencie
   }
   ```
 
+## Authentication
+
+ReuseTabs can be integrated with Blazor's Authentication component.
+
+1. Start by adding the authentication component according to the official documentation, [_ASP.NET Core Blazor authentication and authorization_](https://docs.microsoft.com/en-us/aspnet/core/blazor/security/?view=aspnetcore-6.0&WT.mc_id=DT-MVP-5003987).
+
+2. Install our `AntDesign.Components.Authentication` Nuget package.
+
+    ```bash
+    $ dotnet add package AntDesign.Components.Authentication
+    ```
+
+3. Replace `AuthorizeRouteView` with `AuthorizeReuseTabsRouteView`.
+
+    ```diff
+    <CascadingAuthenticationState>
+        <Router AppAssembly="@typeof(Program).Assembly">
+            <Found Context="routeData">
+    -            <AuthorizeRouteView RouteData="@routeData" 
+    DefaultLayout="@typeof(MainLayout)" />
+    +            <AuthorizeReuseTabsRouteVie
+    RouteData="@routeData"   DefaultLayout="@typeof(MainLayout)" />
+            </Found>
+            <NotFound>
+                <LayoutView Layout="@typeof(MainLayout)">
+                    <p>Sorry, there's nothing at this address.</p>
+                </LayoutView>
+            </NotFound>
+        </Router>
+    </CascadingAuthenticationState>
+    ```
+
+The rest of the configuration is the same as the official documentation and ReuseTabs.
+
 ## More options
 
 You can set more options by using `ReuseTabsPage` attribute above pages.

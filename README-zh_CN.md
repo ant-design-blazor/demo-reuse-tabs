@@ -84,6 +84,38 @@ https://antblazor.com/demo-reuse-tabs/
   }
   ```
 
+## 身份验证和授权
+
+ReuseTabs 可以集成 Blazor 的身份验证组件。
+
+1. 先按照官方文档[《ASP.NET Core Blazor 身份验证和授权》](https://docs.microsoft.com/zh-cn/aspnet/core/blazor/security/?view=aspnetcore-6.0&WT.mc_id=DT-MVP-5003987)，添加身份认证组件。
+
+2. 安装我们的 `AntDesign.Components.Authentication` Nuget 包。
+
+    ```bash
+    $ dotnet add package AntDesign.Components.Authentication
+    ```
+
+3. 把 `AuthorizeRouteView` 替换为 `AuthorizeReuseTabsRouteView`。
+
+    ```diff
+    <CascadingAuthenticationState>
+        <Router AppAssembly="@typeof(Program).Assembly">
+            <Found Context="routeData">
+    -            <AuthorizeRouteView RouteData="@routeData"     DefaultLayout="@typeof(MainLayout)" />
+    +            <AuthorizeReuseTabsRouteView RouteData="@routeData"    DefaultLayout="@typeof(MainLayout)" />
+            </Found>
+            <NotFound>
+                <LayoutView Layout="@typeof(MainLayout)">
+                    <p>Sorry, there's nothing at this address.</p>
+                </LayoutView>
+            </NotFound>
+        </Router>
+    </CascadingAuthenticationState>
+    ```
+
+其他的配置与官方文档和 ReuseTabs 相同。
+
 ## 更多配置
 
 你可以通过使用 `ReuseTabsPage` 特性来设置更多选项。
