@@ -52,7 +52,7 @@ Follow the installation steps of AntDesign and install the AntDesign dependencie
    -       <div class="content px-4">
    -           @Body
    -       </div>
-   +       <ReuseTabs Class="top-row px-4" TabPaneClass="content px-4" / >
+   +       <ReuseTabs Class="top-row px-4" TabPaneClass="content px-4" />
        </div>
    </div>
 
