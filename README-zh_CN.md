@@ -16,23 +16,23 @@ https://antblazor.com/demo-reuse-tabs/
 
 ## 前置条件
 
-先按照 Ant Design 的文档安装 AntDesign 组件 Nuget 包。
+先按照[ Ant Design 的文档 ](https://antblazor.com/docs/introduce)安装 AntDesign 组件 Nuget 包并在 IOC 容器注册依赖。
 
 ## 基础使用
 
 1. 首先，使用 `dotnet new` 命令创建一个 Blazor 项目。
 
-2. 修改项目中的 `App.razor` 文件，使用 `ReuseTabsRouteView` 替换 `RouteView`。
+2. 修改项目中的 `App.razor` 文件，使用 `<CascadingValue Value="routeData">` 包裹 `RouteView`。
 
    ```diff
    <Router AppAssembly="@typeof(Program).Assembly">
        <Found Context="routeData">
-   -       <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" / >
-   +       <ReuseTabsRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-       </Found>
+   +       <CascadingValue Value="routeData">
+               <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" / >
+   +        </CascadingValue>
+      </Found>
        ...
    </Router>
-
    ```
 
 3. 修改 `MainLayout.razor` 文件, 增加 `ReuseTabs` 组件。注意 `@Body` 是不需要的。
@@ -70,15 +70,19 @@ https://antblazor.com/demo-reuse-tabs/
 - 如果需要使用模板来设置复杂的标题, 则需要页面组件实现 `IReuseTabsPage` 接口和 `GetPageTitle` 方法，就返回动态的标题了。
 
   ```diff
-  @page "/"
+  @page "/order/{OrderNo:int}"
   + @implements IReuseTabsPage
 
   <h1>Hello, world!</h1>
 
   @code{
+      
+      [Parameter]
+      public int OrderNo { get; set; }
+
   +   public RenderFragment GetPageTitle() =>
   +       @<div>
-  +           <Icon Type="home"/> Home
+  +           <Icon Type="home"/> Order No. @OrderNo
   +       </div>
   +   ;
   }
@@ -96,7 +100,7 @@ ReuseTabs 可以集成 Blazor 的身份验证组件。
     $ dotnet add package AntDesign.Components.Authentication
     ```
 
-3. 把 `AuthorizeRouteView` 替换为 `AuthorizeReuseTabsRouteView`。
+3. 用 `<CascadingValue Value="routeData">` 包裹  `AuthorizeReuseTabsRouteView`。
 
     ```diff
     <CascadingAuthenticationState>
@@ -131,3 +135,26 @@ ReuseTabs 可以集成 Blazor 的身份验证组件。
 @page "/counter"
 + @attribute [ReuseTabsPage(Ignore = true)]
 ```
+
+更多配置请查看 API。
+
+## API
+
+### ReuseTabsPageAttribute 特性
+
+| 属性 | 描述 | 类型 | 默认值 | 
+| --- | --- | --- | --- |
+| Title | 消失在tab上的固定标题 | string | current path |
+| Ignore | 如果 `Ignore=true`, 页面将不会显示在tab中，而是跟原来一样在整个页面展示。 | boolean | false |
+| Closable | 是否显示关闭按钮并且不可被关闭。 | boolean | false |
+| Pin | 是否固定加载页面，并不可被关闭。一般用于主页或默认页。 | boolean | false |
+
+### ReuseTabsService 服务，在页面组件中注入使用。
+
+| 方法 | Description | 
+| --- | --- | 
+| ClosePage(string key) | 关闭指定key的页面，key 就是 url。 
+| CloseOther(string key) | 关闭除了指定key的页面，或者设置了 `Cloasable=false` 或 `Pin=true` 的页面。
+| CloseAll() | 关闭除了设置了 `Cloasable=false` 或者 `Pin=true` 的页面。  
+| CloseCurrent() | 关闭当前页面。 |
+| Update() | 更新 Tab 状态。当 `GetPageTitle()` 中引用的变量发生变化时，需要调用 `Update()` 来更新 tab 的显示。 | 

@@ -8,6 +8,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.TabView", "src\AntDesign.TabView\AntDesign.TabView.csproj", "{F3C68267-A66B-43F6-BEA2-22DF33F08790}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A3658C20-CF70-43CA-AD06-F39BEACE405F}"
+	ProjectSection(SolutionItems) = preProject
+		README-zh_CN.md = README-zh_CN.md
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

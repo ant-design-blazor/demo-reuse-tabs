@@ -16,23 +16,23 @@ https://antblazor.com/demo-reuse-tabs/
 
 ## Prerequisites
 
-Follow the installation steps of AntDesign and install the AntDesign dependencies.
+Follow the [installation steps of AntDesign](https://antblazor.com/docs/introduce) and install the AntDesign dependencies.
 
 ## Basic case
 
 1. First of all, create a blazor project using `dotnet new` command.
 
-2. Modify the `App.razor` file, replace the `RouteView` with `ReuseTabsRouteView`.
+2. Modify the `App.razor` file, warp the `RouteView` with `<CascadingValue Value="routeData">`.
 
    ```diff
    <Router AppAssembly="@typeof(Program).Assembly">
        <Found Context="routeData">
-   -       <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" / >
-   +       <ReuseTabsRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-       </Found>
+   +       <CascadingValue Value="routeData">
+               <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" / >
+   +        </CascadingValue>
+      </Found>
        ...
    </Router>
-
    ```
 
 3. Then modify the `MainLayout.razor` file, add the `ReuseTabs` component. Note that `@Body` is not required at this case.
@@ -67,18 +67,22 @@ Follow the installation steps of AntDesign and install the AntDesign dependencie
   + @attribute [ReuseTabsPageTitle("Counter")]
   ```
 
-- If you want to use a template, then implement the `IReuseTabsPage` interface and implement the method
+- If you want to use a template or variables, then implement the `IReuseTabsPage` interface and implement the method
 
   ```diff
-  @page "/"
+  @page "/order/{OrderNo:int}"
   + @implements IReuseTabsPage
 
   <h1>Hello, world!</h1>
 
   @code{
+      
+      [Parameter]
+      public int OrderNo { get; set; }
+
   +   public RenderFragment GetPageTitle() =>
   +       @<div>
-  +           <Icon Type="home"/> Home
+  +           <Icon Type="home"/> Order No. @OrderNo
   +       </div>
   +   ;
   }
@@ -96,16 +100,15 @@ ReuseTabs can be integrated with Blazor's Authentication component.
     $ dotnet add package AntDesign.Components.Authentication
     ```
 
-3. Replace `AuthorizeRouteView` with `AuthorizeReuseTabsRouteView`.
+3. Warp the `AuthorizeRouteView` with `<CascadingValue Value="routeData">`.
 
     ```diff
     <CascadingAuthenticationState>
         <Router AppAssembly="@typeof(Program).Assembly">
             <Found Context="routeData">
-    -            <AuthorizeRouteView RouteData="@routeData" 
-    DefaultLayout="@typeof(MainLayout)" />
-    +            <AuthorizeReuseTabsRouteVie
-    RouteData="@routeData"   DefaultLayout="@typeof(MainLayout)" />
+    +           <CascadingValue Value="routeData">
+                    <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+    +           </CascadingValue>
             </Found>
             <NotFound>
                 <LayoutView Layout="@typeof(MainLayout)">
@@ -118,7 +121,7 @@ ReuseTabs can be integrated with Blazor's Authentication component.
 
 The rest of the configuration is the same as the official documentation and ReuseTabs.
 
-## More options
+## More configurations
 
 You can set more options by using `ReuseTabsPage` attribute above pages.
 
@@ -133,3 +136,26 @@ If you want to ignore any pages, you can setting the `Ignore=true` in `ReuseTabs
 @page "/counter"
 + @attribute [ReuseTabsPage(Ignore = true)]
 ```
+
+See the API for more configurations.
+
+## API
+
+### ReuseTabsPageAttribute
+
+| Property | Description | Type | Default | 
+| --- | --- | --- | --- |
+| Title | The fixed title show on tab. | string | current path |
+| Ignore | If `Ignore=true`, the page is not displayed in tab, but in the entire page. | boolean | false |
+| Closable | Whether the delete button can be displayed. | boolean | false |
+| Pin | Whether the page is fixed to load and avoid closing, usually used on the home page or default page. | boolean | false |
+
+### ReuseTabsService
+
+| Method | Description | Type | Default | 
+| --- | --- | --- | --- |
+| ClosePage(string key) | Close the page with the specified key. | string | current path |
+| CloseOther(string key) | Close all pages except those that specify key, `Cloasable=false`, or `Pin=true`. | boolean | false |
+| CloseAll() | Close all pages except those that `Cloasable=false` or `Pin=true`. | boolean | false |
+| CloseCurrent() | Close current page. | boolean | false |
+| Update() | Update the state of current tab. When the variable referenced in `GetPageTitle()` changes, `Update()` needs to be called to update the tab display. | boolean | false |
